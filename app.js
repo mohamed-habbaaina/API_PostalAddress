@@ -7,13 +7,17 @@ document.querySelector('#search').addEventListener('input', async function (para
         let url = `https://geo.api.gouv.fr/communes?codePostal=${this.value}&fields=code,nom,population,surface,departement,region,centre,codesPostaux`;
 
         //  Le Fetch pour récupérer la data
-        await fetch(url).then(response => response.json())
+        await fetch(url)
+        .then((response) => response.json())
         .then(data => {
+            
+            if(data.length > 0){
+
             let affich = '<ul>';    // Affichage responses
             let affich2 = '<ul>';   // Affichage responses
             for(ville of data){
                 affich += `<li><strong>${ville.nom}</strong> - ${ville.population} Habitants</li>`;
-                affich2 += `Departement: <li>${ville.departement.code} ${ville.departement.nom}, Region: ${ville.region.nom}, Surface: ${ville.surface}</li>`;
+                affich2 += `<li>Departement: ${ville.departement.code} ${ville.departement.nom}, Region: ${ville.region.nom}, Surface: ${ville.surface}</li>`;
 
             }
             affich += '</ul>';
@@ -21,6 +25,11 @@ document.querySelector('#search').addEventListener('input', async function (para
 
             document.querySelector('#result').innerHTML = affich;
             document.querySelector('#result2').innerHTML = affich2;
+            }
+            else{
+                    // afficher que le code postal n'existe pas
+                document.querySelector('#result').innerHTML = '<ul>code postal inexistant !</ul>';
+            }
 
         }).catch((err)=> console.console.log('Error: ' + err))
 
